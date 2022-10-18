@@ -1,0 +1,7 @@
+#addProductButton{
+    display: inline-block;
+}
+
+#editProductButton{
+    display:none;
+}
