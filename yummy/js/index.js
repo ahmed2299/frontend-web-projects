@@ -32,7 +32,6 @@ async function startScreen() {
 
 function displayMeals(meals) {
   let temp = "";
-  console.log(meals);
   if(meals!=null){
   for (let i = 0; i < meals.length; i++) {
     temp += `<div class="col-md-6 col-lg-3 my-3 myM  shadow">
@@ -63,7 +62,6 @@ async function getMeal(id) {
     `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`
   );
   let myText = await response.json();
-  console.log(myText.meals[0]);
 
   temp = `<div class="col-md-4 myM text-white">
     <img class="w-100" src="${myText.meals[0].strMealThumb}">
@@ -117,7 +115,6 @@ async function getMeal(id) {
   } else {
     splt = myText.meals[0].strTags.split(",");
     temp = "";
-    console.log(splt[0]);
     for (let i = 0; i < splt.length; i++) {
       temp += `<li class="my-3 mx-1 p-1 alert alert-danger rounded">${splt[i]}</li>`;
     }
@@ -129,7 +126,6 @@ async function getMeal(id) {
 
 $('.nav-category').click(function(){
 
-    console.log($(this).attr('data-list'))
     if($(this).attr('data-list')=='search'){
         search()
     }
@@ -174,7 +170,6 @@ async function search(){
     })
 
     $('#letter').keyup(function(e){
-        console.log(e.target.value)
         searchLetter(e.target.value)
     })
 
@@ -223,7 +218,7 @@ function displayCategories(categories){
     </div>
 </div>`
   }
-
+  document.getElementById('search-container').innerHTML=''
   document.getElementById("rowData").innerHTML = temp;
 
 }
@@ -238,7 +233,6 @@ async function filterByCategory(category){
 async function area(){
   let response = await fetch(`https://www.themealdb.com/api/json/v1/1/list.php?a=list`);
   let myText = await response.json();
-  console.log(myText.meals[0].strArea)
   displayArea(myText.meals)
 }
 
@@ -256,20 +250,19 @@ function displayArea(areas){
     </div>
 </div>`
   }
+  document.getElementById('search-container').innerHTML=''
   document.getElementById("rowData").innerHTML = temp;
 }
 
 async function filterByArea(area){
   let response = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?a=${area}`);
   let myText = await response.json();
-  console.log(myText)
   displayMeals(myText.meals)
 }
 
 async function ingredients(){
   let response = await fetch(`https://www.themealdb.com/api/json/v1/1/list.php?i=list`);
   let myText = await response.json();
-  console.log(myText.meals[0].strArea)
   displayIngredients(myText.meals)
 }
 
@@ -290,6 +283,7 @@ function displayIngredients(ingredients){
   </div>`
     }
   }
+  document.getElementById('search-container').innerHTML=''
   document.getElementById("rowData").innerHTML = temp;
 
 }
@@ -297,6 +291,7 @@ function displayIngredients(ingredients){
 async function getMainIngredient(ingredient){
   let response = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingredient}`);
   let myText = await response.json();
+  document.getElementById('search-container').innerHTML=''
   displayMeals(myText.meals)
 
 }
@@ -349,7 +344,7 @@ function contact(){
           </div>
           <div class="col-md-6">
               <div class="form-group">
-                  <input type="text" class="form-control shadow is-valid" onkeyup="validation()" type="password" id="rePassword" placeholder="Enter RePassword">
+                  <input type="text" class="form-control shadow is-valid" onkeyup="reValidation()" type="password" id="rePassword" placeholder="Enter RePassword">
                   <div class="alert mt-1 alert-danger d-none" id="repasswordalert" role="alert">  
 Enter valid Repassword
                   </div>
@@ -363,11 +358,13 @@ Enter valid Repassword
 
 </section>`
 
-
+document.getElementById('search-container').innerHTML=''
 document.getElementById("rowData").innerHTML = temp;
 
   
 }
+
+let pass=''
 
 function validation(){
   $('#name').keyup(function(e){
@@ -380,7 +377,6 @@ function validation(){
       $('#name').attr('class','form-control shadow is-valid')
       $('#namealert').attr('class','alert mt-1 alert-danger d-none')
     }
-    console.log(e.target.value)
   })
 
   $('#email').keyup(function(e){
@@ -419,7 +415,7 @@ function validation(){
     }
   })
 
-  let pass=''
+
   $('#password').keyup(function(e){
     let regEx=/^(?=.*[a-z])(?=.*[0-9])(?=.{8,})/
     if(!regEx.test(e.target.value)){
@@ -434,9 +430,13 @@ function validation(){
     }
   })
 
+}
+
+
+function reValidation(){
   $('#rePassword').keyup(function(e){
     let regEx=/^(?=.*[a-z])(?=.*[0-9])(?=.{8,})/
-    if(!regEx.test(e.target.value)&&pass!=e.target.value){
+    if(!regEx.test(e.target.value)||pass!=e.target.value){
       $('#rePassword').attr('class','form-control shadow is-invalid')
       $('#repasswordalert').attr('class','alert mt-1 alert-danger d-block')
     }
@@ -446,5 +446,3 @@ function validation(){
     }
   })
 }
-
-
